@@ -33,6 +33,10 @@ const Dashboard = () => {
     router.push("/login"); // Перенаправляем на страницу входа
   };
 
+  const handelFeed = () => {
+    router.push("../feed");
+  };
+
   return (
     <PrivateRoute>
       {/* Защищённый маршрут. Покажет содержимое только если пользователь авторизован */}
@@ -61,6 +65,7 @@ const Dashboard = () => {
         >
           Выйти
         </button>
+        <button onClick={handelFeed}>Лента</button>
       </div>
     </PrivateRoute>
   );

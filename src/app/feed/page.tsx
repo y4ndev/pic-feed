@@ -1,5 +1,6 @@
 "use client";
 
+import FeedContent from "@/components/FeedContent/FeedContent";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -10,9 +11,10 @@ const Feed = () => {
     router.push("../dashboard");
   };
   return (
-    <div>
+    <div className="feed">
       Лента картинок
       <button onClick={handleProfile}>Профиль</button>
+      <FeedContent />
     </div>
   );
 };

@@ -1,15 +1,9 @@
-import React from "react";
-import styles from "./FormError.module.scss";
-interface IFormError {
-  message: null | string;
-}
+import styles from './FormError.module.scss';
 
-const FormError: React.FC<IFormError> = ({ message }) => {
-  if (!message) return null;
-
+const FormError = () => {
   return (
     <>
-      <span className={styles.error}>{message}</span>
+      <span className={styles.error}></span>
     </>
   );
 };

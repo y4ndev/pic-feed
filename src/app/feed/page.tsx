@@ -1,22 +1,7 @@
-"use client";
-
-import FeedContent from "@/components/FeedContent/FeedContent";
-import { useRouter } from "next/navigation";
-import React from "react";
+'use client';
 
 const Feed = () => {
-  const router = useRouter();
-
-  const handleProfile = () => {
-    router.push("../dashboard");
-  };
-  return (
-    <div className="feed">
-      Лента картинок
-      <button onClick={handleProfile}>Профиль</button>
-      <FeedContent />
-    </div>
-  );
+  return <div className='feed'></div>;
 };
 
 export default Feed;

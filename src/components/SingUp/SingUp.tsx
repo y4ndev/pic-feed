@@ -1,112 +1,99 @@
-"use client"; // для корректной работы в Next.js App Router
+'use client';
+import { loginUser, registerUser } from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-import { useState } from "react";
-import { auth } from "@/lib/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-
-const SignUp: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const AuthForm = () => {
+  const [isSignUp, setIsSignUp] = useState(true); // true - регистрация, false - вход
+  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [isSignUp, setIsSignUp] = useState<boolean>(true);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      alert("Регистрация успешна!");
-    } catch (err: any) {
-      if (err.code === "auth/email-already-in-use") {
-        setError("Этот email уже зарегистрирован.");
-      } else if (err.code === "auth/invalid-email") {
-        setError("Неверный формат email.");
-      } else if (err.code === "auth/weak-password") {
-        setError("Пароль слишком слабый. Минимальная длина пароля — 6 символов.");
-      } else {
-        setError("Произошла неизвестная ошибка.");
-      }
+    if (!email || !password || (isSignUp && !username)) {
+      setError('Все поля обязательны');
+      return;
     }
-  };
 
-  const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+    if (password.length < 6) {
+      setError('Пароль должен содержать минимум 6 символов');
+      return;
+    }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Вход успешен!");
-    } catch (err: any) {
-      if (err.code === "auth/user-not-found") {
-        setError("Пользователь с таким email не найден.");
-      } else if (err.code === "auth/wrong-password") {
-        setError("Неверный пароль.");
+      if (isSignUp) {
+        const data = await registerUser(username, email, password);
+        localStorage.setItem('token', data.jwt);
+        setSuccess('Регистрация прошла успешно!');
       } else {
-        setError("Произошла ошибка при входе.");
+        const data = await loginUser(email, password);
+        localStorage.setItem('token', data.jwt);
+        // Здесь можно сделать редирект или обновить состояние
+        router.push('/dashboard');
+        setSuccess('Вход выполнен успешно!');
       }
+      setError(null);
+    } catch (err: any) {
+      setError(
+        err.response?.data?.error?.message ||
+          err.response?.data?.message ||
+          'Ошибка авторизации'
+      );
     }
   };
 
   return (
     <div>
-      {/* Кнопки для переключения между регистрацией и входом */}
-      <div>
-        <button onClick={() => setIsSignUp(true)}>Зарегистрироваться</button>
-        <button onClick={() => setIsSignUp(false)}>Войти</button>
-      </div>
-
-      {/* Форма для регистрации */}
-      {isSignUp === true && (
-        <div>
-          <h2>Регистрация</h2>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <form onSubmit={handleSignUp}>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button type="submit">Зарегистрироваться</button>
-          </form>
-        </div>
-      )}
-
-      {/* Форма для входа */}
-      {isSignUp === false && (
-        <div>
-          <h2>Вход</h2>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <form onSubmit={handleSignIn}>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button type="submit">Войти</button>
-          </form>
-        </div>
-      )}
+      <h2>{isSignUp ? 'Регистрация' : 'Вход'}</h2>
+      <form onSubmit={handleSubmit}>
+        {isSignUp && (
+          <input
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            placeholder='Имя'
+          />
+        )}
+        <input
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder='Email'
+        />
+        <input
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          type='password'
+          placeholder='Пароль'
+        />
+        <button type='submit'>
+          {isSignUp ? 'Зарегистрироваться' : 'Войти'}
+        </button>
+      </form>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+      <button
+        onClick={() => {
+          setIsSignUp(!isSignUp);
+          setError(null);
+          setSuccess(null);
+          setUsername('');
+          setEmail('');
+          setPassword('');
+        }}
+      >
+        {isSignUp
+          ? 'Уже есть аккаунт? Войти'
+          : 'Нет аккаунта? Зарегистрироваться'}
+      </button>
     </div>
   );
 };
 
-export default SignUp;
+export default AuthForm;

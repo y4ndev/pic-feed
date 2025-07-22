@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
-import styles from "./FeedContent.module.scss";
-import NewPostForm from "../NewPostForm/NewPostForm";
-import PostList from "../PostList/PostList";
+import styles from './FeedContent.module.scss';
+
 const FeedContent = () => {
   return (
     <div className={styles.inner}>
-      <div className={styles.feed}>
-        <PostList />
-        <NewPostForm />
-      </div>
+      <div className={styles.feed}></div>
     </div>
   );
 };

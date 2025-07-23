@@ -1,0 +1,34 @@
+.inner {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.form input {
+  outline: none;
+  padding: 7px 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(234, 228, 228, 0.248);
+  transition: box-shadow 0.3s ease; /* анимация для тени */
+}
+
+.form input:focus {
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.941); /* имитация outline с плавным появлением */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.form > * {
+  display: block;
+  margin-top: 10px;
+}
+
+.authInner > * {
+  display: block;
+}

@@ -1,11 +1,11 @@
 'use client';
 
-import SignUp from '@/components/SingUp/SingUp';
+import AuthForm from '@/components/AuthForm/AuthForm';
 
 export default function LoginPage() {
   return (
     <div>
-      <SignUp />
+      <AuthForm />
     </div>
   );
 }

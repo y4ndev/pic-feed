@@ -1,19 +1,40 @@
 'use client';
 import { loginUser, registerUser } from '@/lib/api';
+import useAuthStore from '@/store/AuthStore';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './AuthForm.module.scss';
 
 const AuthForm = () => {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [isLogin, setIsLogin] = useState(true);
+
+  const {
+    username,
+    isLogin,
+    isAuth,
+    setIsAuth,
+    setIsLogin,
+    error,
+    success,
+    login,
+    register,
+    toggleMode,
+    setUsername,
+    setError,
+    setSuccess,
+  } = useAuthStore();
 
   const router = useRouter();
   const isRegister = !isLogin;
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuth(true);
+      router.push('/dashboard');
+    }
+  }, [router]);
 
   const resetMessages = () => {
     setError(null);
@@ -28,27 +49,13 @@ const AuthForm = () => {
   };
 
   const handleToggle = () => {
-    setIsLogin(prev => !prev);
+    setIsLogin(!login);
     resetForm();
-  };
-
-  const validate = () => {
-    if (!email || !password || (isRegister && !username)) {
-      setError('Все поля обязательны');
-      return false;
-    }
-    if (password.length < 6) {
-      setError('Пароль должен содержать минимум 6 символов');
-      return false;
-    }
-    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     resetMessages();
-
-    if (!validate()) return;
 
     try {
       if (isRegister) {
@@ -79,6 +86,7 @@ const AuthForm = () => {
           <div className={styles.authInner}>
             <label htmlFor='username'>Username</label>
             <input
+              required
               id='username'
               value={username}
               onChange={e => setUsername(e.target.value)}
@@ -90,7 +98,9 @@ const AuthForm = () => {
         <div className={styles.authInner}>
           <label htmlFor='email'>Email</label>
           <input
+            required
             id='email'
+            type='email'
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder='Email'
@@ -100,6 +110,8 @@ const AuthForm = () => {
         <div className={styles.authInner}>
           <label htmlFor='password'>Password</label>
           <input
+            required
+            minLength={4}
             id='password'
             type='password'
             value={password}

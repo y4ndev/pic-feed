@@ -1,9 +1,10 @@
 'use client';
-import { loginUser, registerUser } from '@/lib/api';
 import useAuthStore from '@/store/AuthStore';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import styles from './AuthForm.module.scss';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 
 const AuthForm = () => {
   const [email, setEmail] = useState('');
@@ -12,18 +13,18 @@ const AuthForm = () => {
   const {
     username,
     isLogin,
-    isAuth,
     setIsAuth,
     setIsLogin,
     error,
     success,
     login,
     register,
-    toggleMode,
     setUsername,
     setError,
     setSuccess,
   } = useAuthStore();
+
+  const formProps = { email, password, setEmail, setPassword };
 
   const router = useRouter();
   const isRegister = !isLogin;
@@ -49,7 +50,7 @@ const AuthForm = () => {
   };
 
   const handleToggle = () => {
-    setIsLogin(!login);
+    setIsLogin(!isLogin);
     resetForm();
   };
 
@@ -59,12 +60,10 @@ const AuthForm = () => {
 
     try {
       if (isRegister) {
-        const data = await registerUser(username, email, password);
-        localStorage.setItem('token', data.jwt);
+        await register(username, email, password);
         setSuccess('Регистрация прошла успешно!');
       } else {
-        const data = await loginUser(email, password);
-        localStorage.setItem('token', data.jwt);
+        await login(email, password);
         setSuccess('Вход выполнен успешно!');
         router.push('/dashboard');
       }
@@ -82,65 +81,16 @@ const AuthForm = () => {
       <h2>{isRegister ? 'Регистрация' : 'Вход'}</h2>
 
       <form className={styles.form} onSubmit={handleSubmit}>
-        {isRegister && (
-          <div className={styles.authInner}>
-            <label htmlFor='username'>Username</label>
-            <input
-              required
-              id='username'
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-              placeholder='Имя'
-            />
-          </div>
+        {isRegister ? (
+          <RegisterForm
+            {...formProps}
+            username={username}
+            setUsername={setUsername}
+            handleToggle={handleToggle}
+          />
+        ) : (
+          <LoginForm {...formProps} handleToggle={handleToggle} />
         )}
-
-        <div className={styles.authInner}>
-          <label htmlFor='email'>Email</label>
-          <input
-            required
-            id='email'
-            type='email'
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder='Email'
-          />
-        </div>
-
-        <div className={styles.authInner}>
-          <label htmlFor='password'>Password</label>
-          <input
-            required
-            minLength={4}
-            id='password'
-            type='password'
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            placeholder='Пароль'
-          />
-        </div>
-
-        <button className='btn' type='submit'>
-          {isRegister ? 'Зарегистрироваться' : 'Войти'}
-        </button>
-
-        <div className={styles.switch}>
-          {isLogin ? (
-            <p>
-              Нет аккаунта?{' '}
-              <span onClick={handleToggle} className={styles.link}>
-                <a href='#'>Зарегистрироваться</a>
-              </span>
-            </p>
-          ) : (
-            <p>
-              Уже есть аккаунт?{' '}
-              <span onClick={handleToggle} className={styles.link}>
-                <a href='#'>Войти</a>
-              </span>
-            </p>
-          )}
-        </div>
       </form>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}

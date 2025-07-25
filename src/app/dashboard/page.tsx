@@ -1,5 +1,6 @@
 'use client';
 
+import PrivateRoute from '@/components/PrivateRoute/PrivateRoute';
 import { useRouter } from 'next/navigation';
 
 const Dashboard = () => {
@@ -12,10 +13,12 @@ const Dashboard = () => {
 
   return (
     <>
-      <h1>Добро пожаловать!</h1>
-      <button className='btn' onClick={handleLogout}>
-        Выход
-      </button>
+      <PrivateRoute>
+        <h1>Добро пожаловать!</h1>
+        <button className='btn' onClick={handleLogout}>
+          Выход
+        </button>
+      </PrivateRoute>
     </>
   );
 };

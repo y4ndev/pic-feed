@@ -5,6 +5,7 @@ interface IAuth {
   username: string;
   token: string | null;
   error: string | null;
+  loading: boolean;
   success: string | null;
   isLogin: boolean;
   isAuth: boolean;
@@ -16,6 +17,7 @@ interface IAuth {
   ) => Promise<void>;
   setUsername: (name: string) => void;
   setError: (error: string | null) => void;
+  setLoading: (value: boolean) => void;
   setSuccess: (msg: string | null) => void;
   setIsAuth: (value: boolean) => void;
   setIsLogin: (value: boolean) => void;
@@ -23,6 +25,7 @@ interface IAuth {
 }
 
 const useAuthStore = create<IAuth>(set => ({
+  loading: false,
   username: '',
   token: '',
   error: null,
@@ -45,6 +48,7 @@ const useAuthStore = create<IAuth>(set => ({
   },
 
   setUsername: username => set({ username }),
+  setLoading: loading => set({ loading }),
   setError: error => set({ error }),
   setSuccess: msg => set({ success: msg }),
   setIsAuth: value => set({ isAuth: value }),

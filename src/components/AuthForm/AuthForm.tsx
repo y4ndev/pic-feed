@@ -12,6 +12,7 @@ const AuthForm = () => {
 
   const {
     username,
+    loading,
     isLogin,
     setIsAuth,
     setIsLogin,
@@ -21,6 +22,7 @@ const AuthForm = () => {
     register,
     setUsername,
     setError,
+    setLoading,
     setSuccess,
   } = useAuthStore();
 
@@ -33,9 +35,11 @@ const AuthForm = () => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsAuth(true);
-      router.push('/dashboard');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1500);
     }
-  }, [router]);
+  }, [router, setIsAuth]);
 
   const resetMessages = () => {
     setError(null);
@@ -57,6 +61,7 @@ const AuthForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     resetMessages();
+    setLoading(true);
 
     try {
       if (isRegister) {
@@ -65,7 +70,9 @@ const AuthForm = () => {
       } else {
         await login(email, password);
         setSuccess('Вход выполнен успешно!');
-        router.push('/dashboard');
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1500);
       }
     } catch (err: any) {
       const message =
@@ -73,25 +80,32 @@ const AuthForm = () => {
         err.response?.data?.message ||
         'Ошибка авторизации';
       setError(message);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
     }
   };
 
   return (
     <div className={styles.inner}>
       <h2>{isRegister ? 'Регистрация' : 'Вход'}</h2>
-
-      <form className={styles.form} onSubmit={handleSubmit}>
-        {isRegister ? (
-          <RegisterForm
-            {...formProps}
-            username={username}
-            setUsername={setUsername}
-            handleToggle={handleToggle}
-          />
-        ) : (
-          <LoginForm {...formProps} handleToggle={handleToggle} />
-        )}
-      </form>
+      {loading ? (
+        <p>Загрузка...</p>
+      ) : (
+        <form className={styles.form} onSubmit={handleSubmit}>
+          {isRegister ? (
+            <RegisterForm
+              {...formProps}
+              username={username}
+              setUsername={setUsername}
+              handleToggle={handleToggle}
+            />
+          ) : (
+            <LoginForm {...formProps} handleToggle={handleToggle} />
+          )}
+        </form>
+      )}
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {success && <p style={{ color: 'green' }}>{success}</p>}

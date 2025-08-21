@@ -1,29 +1,25 @@
 'use client';
 import useAuthStore from '@/store/AuthStore';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './AuthForm.module.scss';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 
 const AuthForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { email, password, username, loading, isLogin, error, success } =
+    useAuthStore();
 
+  //--actions
   const {
-    username,
-    loading,
-    isLogin,
+    setEmail,
+    setPassword,
     setIsAuth,
     setIsLogin,
-    error,
-    success,
+    setUsername,
+    resetUI,
     login,
     register,
-    setUsername,
-    setError,
-    setLoading,
-    setSuccess,
   } = useAuthStore();
 
   const formProps = { email, password, setEmail, setPassword };
@@ -35,22 +31,15 @@ const AuthForm = () => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsAuth(true);
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1500);
+      router.push('/dashboard');
     }
   }, [router, setIsAuth]);
-
-  const resetMessages = () => {
-    setError(null);
-    setSuccess(null);
-  };
 
   const resetForm = () => {
     setUsername('');
     setEmail('');
     setPassword('');
-    resetMessages();
+    resetUI();
   };
 
   const handleToggle = () => {
@@ -60,36 +49,22 @@ const AuthForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    resetMessages();
-    setLoading(true);
+    resetUI();
 
     try {
       if (isRegister) {
         await register(username, email, password);
-        setSuccess('Регистрация прошла успешно!');
       } else {
         await login(email, password);
-        setSuccess('Вход выполнен успешно!');
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 1500);
+
+        router.push('/dashboard');
       }
-    } catch (err: any) {
-      const message =
-        err.response?.data?.error?.message ||
-        err.response?.data?.message ||
-        'Ошибка авторизации';
-      setError(message);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1500);
-    }
+    } catch (err: any) {}
   };
 
   return (
     <div className={styles.inner}>
-      <h2>{isRegister ? 'Регистрация' : 'Вход'}</h2>
+      {!loading && <h2>{isRegister ? 'Регистрация' : 'Вход'}</h2>}
       {loading ? (
         <p>Загрузка...</p>
       ) : (

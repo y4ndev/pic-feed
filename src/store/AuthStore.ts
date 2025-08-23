@@ -1,43 +1,6 @@
 import { loginUser, registerUser } from '@/lib/api';
+import { IAuth } from '@/types/data';
 import { create } from 'zustand';
-
-interface IAuth {
-  email: string;
-  password: string;
-  username: string;
-  token: string | null;
-  error: string | null;
-  loading: boolean;
-  success: string | null;
-  isLogin: boolean;
-  isAuth: boolean;
-
-  //--actions
-  login: (email: string, password: string) => Promise<void>;
-  register: (
-    email: string,
-    username: string,
-    password: string
-  ) => Promise<void>;
-  logout: () => void;
-
-  //-ui helpers
-  startLoading: () => void;
-  finishLoading: (msg?: string) => void;
-  fail: (errorMsg: string) => void;
-  resetUI: () => void;
-
-  //--setters
-  setEmail: (email: string) => void;
-  setPassword: (password: string) => void;
-  setUsername: (name: string) => void;
-  setError: (error: string | null) => void;
-  setLoading: (value: boolean) => void;
-  setSuccess: (msg: string | null) => void;
-  setIsAuth: (value: boolean) => void;
-  setIsLogin: (value: boolean) => void;
-  toggleMode: () => void;
-}
 
 const useAuthStore = create<IAuth>(set => ({
   loading: false,
@@ -56,7 +19,9 @@ const useAuthStore = create<IAuth>(set => ({
       set({ loading: true, error: null, success: null });
       const data = await loginUser(email, password);
       localStorage.setItem('token', data.jwt);
+      localStorage.setItem('username', data.user.username);
       set({
+        username: data.user.username,
         isAuth: true,
         token: data.jwt,
         loading: false,

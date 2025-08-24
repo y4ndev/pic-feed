@@ -4,6 +4,7 @@ interface HeaderProps {
   showAvatar?: boolean;
   showProfile?: boolean;
   showTitle?: boolean;
+  showPage?: boolean;
   showLogout?: () => void;
 }
 
@@ -12,14 +13,18 @@ const Header: React.FC<HeaderProps> = ({
   showProfile,
   showTitle,
   showLogout,
+  showPage,
 }) => {
   return (
     <header className={styles.header}>
       <div className={styles.left}>
         <div className={styles.back}>
-          <button>На главнаую</button>
+          <a>На главнаую</a>
         </div>
         <span className={styles.title}>Pic-feed</span>
+      </div>
+      <div className={styles.middle}>
+        <h2>Личный кабинет</h2>
       </div>
       <div className={styles.right}>
         <div className={styles.theme}>Тёма</div>

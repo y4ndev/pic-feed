@@ -5,7 +5,7 @@ import Header from '../header/Header';
 import styles from './Profile.module.scss';
 
 const Profile = () => {
-  const { username, setUsername } = useAuthStore();
+  const { username, setUsername, email } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -19,24 +19,41 @@ const Profile = () => {
   };
 
   return (
-    <>
+    <div className={styles.wrapper}>
       <Header />
       <div className={styles.profile}>
-        <h2>Добро пожаловать {username}</h2>
-        <div className={styles.profileSetting}>
+        <div className={styles.content}>
           <form action=''>
-            <span> Имя пользователя:</span>
-            <div className={styles.profileName}>
+            <div className={styles.avatar}>
+              <span>Аватар</span>
+              <span className={styles.picture}></span>
+              <a href=''>Изменить фото</a>
+            </div>
+
+            <div className={styles.name}>
               <input type='text' placeholder={username} />{' '}
               <a className={styles.btn}>Сменить</a>
             </div>
+            <div className={styles.email}>
+              <span>Email:</span>
+              <span>{email}</span>
+            </div>
+
+            <div className={styles.password}>
+              <div className={styles.passwordInner}>
+                <span>Пароль:</span>
+                <span>******</span>
+              </div>
+              <a href=''>Изменить</a>
+            </div>
+
+            <button className='btn' onClick={handleLogout}>
+              Выход
+            </button>
           </form>
         </div>
-        <button className='btn' onClick={handleLogout}>
-          Выход
-        </button>
       </div>
-    </>
+    </div>
   );
 };
 

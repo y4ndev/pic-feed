@@ -1,21 +1,35 @@
-.profile {
-  h2 {
-    margin-bottom: 50px;
-  }
-}
-
-.profile {
+.wrapper {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
   min-height: 100%;
 }
 
-.profileSetting {
-  margin-bottom: 15px;
+.profile {
   display: flex;
+  flex: 1;
   align-items: center;
+  justify-content: center;
+}
+
+.picture {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #ffffff;
+  display: block;
+  border-radius: 50%;
+}
+
+.content {
+  padding: 25px;
+  width: 400px;
+  height: 400px;
+  background-color: #4342427a;
+  -webkit-box-shadow: 0px 0px 8px 3px rgba(255, 255, 255, 0.2);
+  -moz-box-shadow: 0px 0px 8px 3px rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 0px 8px 3px rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+
+  display: flex;
   justify-content: center;
 
   span {
@@ -24,19 +38,49 @@
   }
 }
 
-.profileName {
+.avatar {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+  flex: 1;
+}
 
+.name {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
   input {
     padding: 0 10px;
     height: 25px;
   }
 }
 
+.email {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.password {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &Inner {
+    display: block;
+    display: flex;
+  }
+
+  a {
+    display: block;
+  }
+}
+
 .btn {
   margin-left: 10px;
+  display: none;
 }
 
 .profile a {

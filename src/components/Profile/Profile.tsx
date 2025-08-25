@@ -5,13 +5,15 @@ import Header from '../header/Header';
 import styles from './Profile.module.scss';
 
 const Profile = () => {
-  const { username, setUsername, email } = useAuthStore();
+  const { username, setUsername, email, setEmail } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
     const username = localStorage.getItem('username');
+    const email = localStorage.getItem('email');
+    setEmail(email ?? '');
     setUsername(username ?? '');
-  }, [setUsername]);
+  }, [setUsername, setEmail]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -20,12 +22,17 @@ const Profile = () => {
 
   return (
     <div className={styles.wrapper}>
-      <Header />
+      <Header
+        showBack
+        showLogout
+        onLogout={handleLogout}
+        title={'Личный кабинет'}
+      />
       <div className={styles.profile}>
         <div className={styles.content}>
-          <form action=''>
+          <form className={styles.form} action=''>
             <div className={styles.avatar}>
-              <span>Аватар</span>
+              <span className={styles.title}>Аватар</span>
               <span className={styles.picture}></span>
               <a href=''>Изменить фото</a>
             </div>
@@ -36,20 +43,22 @@ const Profile = () => {
             </div>
             <div className={styles.email}>
               <span>Email:</span>
-              <span>{email}</span>
+              <span className={styles.small}>
+                {'  '}
+                {email}
+              </span>
             </div>
 
             <div className={styles.password}>
               <div className={styles.passwordInner}>
                 <span>Пароль:</span>
-                <span>******</span>
+                <span className={styles.small}>******</span>
               </div>
               <a href=''>Изменить</a>
             </div>
-
-            <button className='btn' onClick={handleLogout}>
-              Выход
-            </button>
+            <div className={styles.logout}>
+              <a href=''></a>
+            </div>
           </form>
         </div>
       </div>

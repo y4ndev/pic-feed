@@ -11,12 +11,21 @@
   justify-content: center;
 }
 
+.small {
+  font-size: 14px;
+  margin-left: 5px;
+}
+
 .picture {
   width: 100px;
   height: 100px;
   border: 2px solid #ffffff;
-  display: block;
   border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.title {
+  margin-bottom: 15px;
 }
 
 .content {
@@ -31,11 +40,6 @@
 
   display: flex;
   justify-content: center;
-
-  span {
-    margin-bottom: 3px;
-    display: block;
-  }
 }
 
 .avatar {
@@ -43,8 +47,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-bottom: 20px;
-  flex: 1;
+  margin-bottom: 35px;
 }
 
 .name {
@@ -53,7 +56,7 @@
   margin-bottom: 20px;
   input {
     padding: 0 10px;
-    height: 25px;
+    height: 35px;
   }
 }
 

@@ -1,35 +1,61 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+import darkIcon from '../../assets/img/dark.png';
+import lightIcon from '../../assets/img/light.png';
 import styles from './Header.module.scss';
 
 interface HeaderProps {
-  showAvatar?: boolean;
+  title?: string;
   showProfile?: boolean;
-  showTitle?: boolean;
-  showPage?: boolean;
-  showLogout?: () => void;
+  showBack?: boolean;
+  showLogout?: boolean;
+  onLogout?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
-  showAvatar,
+  title,
   showProfile,
-  showTitle,
   showLogout,
-  showPage,
+  showBack,
+  onLogout,
 }) => {
+  const [theme, setTheme] = useState<boolean>(false);
+
+  const toggleTheme = () => {
+    setTheme(theme => !theme);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.left}>
-        <div className={styles.back}>
-          <a>На главнаую</a>
-        </div>
-        <span className={styles.title}>Pic-feed</span>
+        {showBack && (
+          <div className={styles.back}>
+            <Link href='/feed'>На главнаую</Link>
+          </div>
+        )}
+
+        {/* <span className={styles.title}>Pic-feed</span> */}
       </div>
-      <div className={styles.middle}>
-        <h2>Личный кабинет</h2>
-      </div>
+      <div className={styles.middle}>{title && <h2>{title}</h2>}</div>
       <div className={styles.right}>
-        <div className={styles.theme}>Тёма</div>
-        <a className={styles.logout}>Выйти</a>
-        <div className={styles.profile}>Профиль</div>
+        <a className={styles.theme} onClick={toggleTheme}>
+          {theme ? (
+            <Image alt='light' src={lightIcon} width={35} height={35}></Image>
+          ) : (
+            <Image alt='dark' src={darkIcon} width={35} height={35}></Image>
+          )}
+        </a>
+        {showLogout && (
+          <a className={styles.logout} onClick={onLogout}>
+            Выйти
+          </a>
+        )}
+        {showProfile && (
+          <Link href={'/dashboard'} className={styles.profile}>
+            Профиль
+          </Link>
+        )}
       </div>
     </header>
   );

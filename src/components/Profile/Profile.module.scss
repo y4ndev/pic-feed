@@ -52,11 +52,16 @@
 
 .name {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   margin-bottom: 20px;
   input {
     padding: 0 10px;
     height: 35px;
+  }
+
+  span {
+    display: block;
+    margin-bottom: 5px;
   }
 }
 
@@ -83,7 +88,11 @@
 
 .btn {
   margin-left: 10px;
-  display: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+
+  text-align: center;
+  background-color: #2f9bee;
 }
 
 .profile a {

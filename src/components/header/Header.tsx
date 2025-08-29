@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({
       <div className={styles.left}>
         {showBack && (
           <div className={styles.back}>
-            <Link href='/feed'>На главнаую</Link>
+            <Link href='/feed'>&#8592;На главнаую</Link>
           </div>
         )}
 

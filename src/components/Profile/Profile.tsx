@@ -1,7 +1,7 @@
 import useAuthStore from '@/store/AuthStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import Header from '../header/Header';
+import Header from '../Header/Header';
 import styles from './Profile.module.scss';
 
 const Profile = () => {
@@ -38,8 +38,12 @@ const Profile = () => {
             </div>
 
             <div className={styles.name}>
-              <input type='text' placeholder={username} />{' '}
-              <a className={styles.btn}>Сменить</a>
+              <div className={styles.nameInner}>
+                <span >Имя пользователя</span>
+                <input type='text' placeholder={username} />{' '}
+              </div>
+
+              <button className={`${styles.btn} btn`}>Сохранить</button>
             </div>
             <div className={styles.email}>
               <span>Email:</span>

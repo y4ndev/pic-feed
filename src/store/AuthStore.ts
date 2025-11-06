@@ -19,6 +19,7 @@ const useAuthStore = create<IAuth>(set => ({
       set({ loading: true, error: null, success: null });
       const data = await loginUser(email, password);
       localStorage.setItem('token', data.jwt);
+      localStorage.setItem('userId', data.userId);
       localStorage.setItem('username', data.user.username);
       localStorage.setItem('email', data.user.email);
       set({

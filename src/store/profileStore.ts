@@ -24,7 +24,7 @@ interface IProfileState {
   ) => Promise<void>;
 }
 
-const useProfileStore = create(set => ({
+const useProfileStore = create<IProfileState>(set => ({
   avatar: '',
   username: '',
   email: '',
@@ -46,8 +46,8 @@ const useProfileStore = create(set => ({
         email: data.email,
         loadingProfile: false,
       });
-    } catch {
-      set({ errorProfile: 'Ошибка загрузки профиля', loadingProfile: false });
+    } catch (err: any) {
+      set({ errorProfile: err || 'Ошибка', loadingProfile: false });
     }
   },
 
@@ -66,7 +66,7 @@ const useProfileStore = create(set => ({
       if (!userId)
         throw new Error('Не удалось получить ID пользователя из токена');
       const uploaded = await uploadAvatar(file, token);
-      const updated = await updateUserAvatar(uploaded.id, token);
+      const updated = await updateUserAvatar(uploaded.id, userId, token);
       set({
         avatar: updated.avatar?.url || null,
         successProfile: 'Аватар обновлен!',
@@ -81,7 +81,14 @@ const useProfileStore = create(set => ({
     try {
       set({ loadingProfile: true, errorProfile: null });
       const token = localStorage.getItem('token');
-      await updateUserName(newName, token);
+      if (!token) {
+        throw new Error('Токен отсутствует');
+      }
+      const userId = getUserIdFromToken(token);
+      if (!userId) {
+        throw new Error('Некорректный токен');
+      }
+      await updateUserName(userId, newName, token);
       set({
         username: newName,
         successProfile: 'Имя обновлено!',
@@ -92,10 +99,11 @@ const useProfileStore = create(set => ({
     }
   },
 
-  changePassword: async (current, newPass) => {
+  changePassword: async (current: string, newPass: string) => {
     try {
       set({ loadingProfile: true, errorProfile: null });
       const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found');
       await updatePassword(current, newPass, token);
       set({ successProfile: 'Пароль обновлен!', loadingProfile: false });
     } catch {
@@ -103,3 +111,5 @@ const useProfileStore = create(set => ({
     }
   },
 }));
+
+export default useProfileStore;

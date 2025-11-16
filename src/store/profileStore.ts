@@ -36,9 +36,12 @@ const useProfileStore = create<IProfileState>(set => ({
     try {
       set({ loadingProfile: true, errorProfile: null });
       const token = localStorage.getItem('token');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await res.json();
       set({
         avatar: data.avatar?.url || null,

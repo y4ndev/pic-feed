@@ -1,19 +1,24 @@
-import useAuthStore from '@/store/AuthStore';
+import useProfileStore from '@/store/ProfileStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Header from '../Header/Header';
 import styles from './Profile.module.scss';
 
 const Profile = () => {
-  const { username, setUsername, email, setEmail } = useAuthStore();
+  // const { username, setUsername, email, setEmail } = useAuthStore();
+  const { username, email, fetchProfile } = useProfileStore();
   const router = useRouter();
 
+  // useEffect(() => {
+  //   const username = localStorage.getItem('username');
+  //   const email = localStorage.getItem('email');
+  //   setEmail(email ?? '');
+  //   setUsername(username ?? '');
+  // }, [setUsername, setEmail]);
+
   useEffect(() => {
-    const username = localStorage.getItem('username');
-    const email = localStorage.getItem('email');
-    setEmail(email ?? '');
-    setUsername(username ?? '');
-  }, [setUsername, setEmail]);
+    fetchProfile();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -39,7 +44,7 @@ const Profile = () => {
 
             <div className={styles.name}>
               <div className={styles.nameInner}>
-                <span >Имя пользователя</span>
+                <span>Имя пользователя</span>
                 <input type='text' placeholder={username} />{' '}
               </div>
 

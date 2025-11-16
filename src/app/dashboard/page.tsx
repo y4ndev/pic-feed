@@ -7,13 +7,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const Dashboard = () => {
-  const { username, setUsername } = useAuthStore();
+  // const { username, setUsername } = useAuthStore();
   const router = useRouter();
 
-  useEffect(() => {
-    const name = localStorage.getItem('username');
-    setUsername(name || '');
-  }, [setUsername]);
+  // useEffect(() => {
+  //   const name = localStorage.getItem('username');
+  //   setUsername(name || '');
+  // }, [setUsername]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');

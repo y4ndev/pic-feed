@@ -1,3 +1,5 @@
+import useAuthStore from '@/store/AuthStore';
+import { useForm } from 'react-hook-form';
 import styles from './AuthForm.module.scss';
 
 interface LoginFormProps {
@@ -5,52 +7,54 @@ interface LoginFormProps {
   password: string;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
-  handleToggle: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({
-  email,
-  password,
-  setEmail,
-  setPassword,
-  handleToggle,
-}) => {
+const LoginForm: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const { login, loading, success, toggleMode } = useAuthStore();
+
+  const onSubmit = (data: any) => {
+    login(data.email, data.password);
+  };
+
   return (
     <>
-      <div className={styles.authInner}>
-        <label htmlFor='email'>Email</label>
-        <input
-          required
-          id='email'
-          type='email'
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder='Email'
-        />
-      </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className={styles.authInner}>
+          <label htmlFor='email'>Email</label>
+          <input
+            id='email'
+            {...register('email', { required: true })}
+            placeholder='Email'
+          />
+        </div>
 
-      <div className={styles.authInner}>
-        <label htmlFor='password'>Password</label>
-        <input
-          required
-          minLength={4}
-          id='password'
-          type='password'
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          placeholder='Пароль'
-        />
-      </div>
+        <div className={styles.authInner}>
+          <label htmlFor='password'>Password</label>
+          <input
+            minLength={4}
+            id='password'
+            type='password'
+            placeholder='Пароль'
+            {...register('password', { required: true })}
+          />
+        </div>
 
-      <button className='btn' type='submit'>
-        Войти
-      </button>
-      <p>
-        Нет аккаунта?{' '}
-        <span onClick={handleToggle} className={styles.link}>
-          <a href='#'>Зарегистрироваться</a>
-        </span>
-      </p>
+        <button className='btn' type='submit'>
+          Войти
+        </button>
+        <p>
+          Нет аккаунта?{' '}
+          <span onClick={toggleMode} className={styles.link}>
+            <a href='#'>Зарегистрироваться</a>
+          </span>
+        </p>
+      </form>
     </>
   );
 };

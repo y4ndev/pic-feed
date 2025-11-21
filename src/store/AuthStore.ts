@@ -3,15 +3,13 @@ import { IAuth } from '@/types/data';
 import { create } from 'zustand';
 
 const useAuthStore = create<IAuth>(set => ({
+  user: null,
   loading: false,
-  password: '',
-  email: '',
-  username: '',
   token: '',
   error: null,
   success: null,
-  isLogin: true,
   isAuth: false,
+  isLogin: true,
 
   //auth-methods
   login: async (email, password) => {
@@ -19,16 +17,12 @@ const useAuthStore = create<IAuth>(set => ({
       set({ loading: true, error: null, success: null });
       const data = await loginUser(email, password);
       localStorage.setItem('token', data.jwt);
-      localStorage.setItem('userId', data.userId);
-      localStorage.setItem('username', data.user.username);
-      localStorage.setItem('email', data.user.email);
       set({
-        email: data.user.email,
-        username: data.user.username,
         isAuth: true,
+        user: data.user,
         token: data.jwt,
         loading: false,
-        success: 'Вход успешно выполнен!',
+        success: 'Вход успешно выполнен',
       });
     } catch (err: any) {
       set({
@@ -55,9 +49,6 @@ const useAuthStore = create<IAuth>(set => ({
   fail: errorMsg => set({ loading: false, error: errorMsg }),
   resetUI: () => set({ error: null, success: null }),
 
-  setEmail: email => set({ email }),
-  setPassword: password => set({ password }),
-  setUsername: username => set({ username }),
   setLoading: loading => set({ loading }),
   setError: error => set({ error }),
   setSuccess: msg => set({ success: msg }),

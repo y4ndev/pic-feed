@@ -1,7 +1,5 @@
 export interface IAuthState {
-  email: string;
-  password: string;
-  username: string;
+  user: any | null;
   token: string | null;
   error: string | null;
   loading: boolean;
@@ -28,9 +26,6 @@ export interface IAuthHelpers {
 }
 
 export interface IAuthSetters {
-  setEmail: (email: string) => void;
-  setPassword: (password: string) => void;
-  setUsername: (name: string) => void;
   setError: (error: string | null) => void;
   setLoading: (value: boolean) => void;
   setSuccess: (msg: string | null) => void;

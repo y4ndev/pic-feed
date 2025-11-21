@@ -1,3 +1,5 @@
+import useAuthStore from '@/store/AuthStore';
+import { useForm } from 'react-hook-form';
 import styles from './AuthForm.module.scss';
 
 interface RegisterFormProps {
@@ -7,27 +9,23 @@ interface RegisterFormProps {
   setUsername: (username: string) => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
-  handleToggle: () => void;
+
 }
 
-const RegisterForm: React.FC<RegisterFormProps> = ({
-  username,
-  email,
-  password,
-  setUsername,
-  setEmail,
-  setPassword,
-  handleToggle,
-}) => {
+const RegisterForm: React.FC = () => {
+  const { register: formRegister, handleSubmit } = useForm();
+  const { register: registerUser, loading, error, success, toggleMode } = useAuthStore();
+
+  const onSubmit = (data: any) => {
+    registerUser(data.email, data.username, data.password);
+  };
   return (
     <>
       <div className={styles.authInner}>
         <label htmlFor='username'>Username</label>
         <input
-          required
           id='username'
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+          {...formRegister('username', { required: true })}
           placeholder='Имя'
         />
       </div>
@@ -37,9 +35,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <input
           required
           id='email'
-          type='email'
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          {...formRegister('email', { required: true })}
           placeholder='Email'
         />
       </div>
@@ -47,12 +43,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
       <div className={styles.authInner}>
         <label htmlFor='password'>Password</label>
         <input
-          required
           minLength={4}
           id='password'
           type='password'
-          value={password}
-          onChange={e => setPassword(e.target.value)}
+          {...formRegister('password', { required: true })}
           placeholder='Пароль'
         />
       </div>
@@ -63,7 +57,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
 
       <p>
         Уже есть аккаунт?{' '}
-        <span onClick={handleToggle} className={styles.link}>
+        <span onClick={toggleMode} className={styles.link}>
           <a href='#'>Войти</a>
         </span>
       </p>

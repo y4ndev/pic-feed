@@ -1,3 +1,4 @@
+import useAuthStore from '@/store/AuthStore';
 import useProfileStore from '@/store/ProfileStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -5,23 +6,16 @@ import Header from '../Header/Header';
 import styles from './Profile.module.scss';
 
 const Profile = () => {
-  // const { username, setUsername, email, setEmail } = useAuthStore();
+  const { logout } = useAuthStore();
   const { username, email, fetchProfile } = useProfileStore();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const username = localStorage.getItem('username');
-  //   const email = localStorage.getItem('email');
-  //   setEmail(email ?? '');
-  //   setUsername(username ?? '');
-  // }, [setUsername, setEmail]);
-
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [fetchProfile]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    logout();
     router.push('/login');
   };
 

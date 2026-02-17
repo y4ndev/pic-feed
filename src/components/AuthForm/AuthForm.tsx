@@ -7,14 +7,10 @@ import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 
 const AuthForm = () => {
-  const {  isLogin,} = useAuthStore();
+  const { isLogin } = useAuthStore();
 
   //--actions
-  const {
-    setIsAuth,
-    setIsLogin,
-    resetUI,
-  } = useAuthStore();
+  const { setIsAuth, setIsLogin, resetUI, isAuth } = useAuthStore();
 
   const router = useRouter();
   const isRegister = !isLogin;
@@ -23,9 +19,11 @@ const AuthForm = () => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsAuth(true);
-      router.push('/dashboard');
+      if (isAuth) {
+        router.push('/dashboard');
+      }
     }
-  }, [router, setIsAuth]);
+  }, [router, setIsAuth, isAuth]);
 
   const resetForm = () => {
     resetUI();

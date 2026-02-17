@@ -15,6 +15,7 @@ const useAuthStore = create<IAuth>(set => ({
   login: async (email, password) => {
     try {
       set({ loading: true, error: null, success: null });
+      await new Promise(resolve => setTimeout(resolve, 700));
       const data = await loginUser(email, password);
       localStorage.setItem('token', data.jwt);
       set({
@@ -24,6 +25,7 @@ const useAuthStore = create<IAuth>(set => ({
         loading: false,
         success: 'Вход успешно выполнен',
       });
+      setTimeout(() => set({ success: '' }), 3000);
     } catch (err: any) {
       set({
         loading: false,
@@ -33,8 +35,8 @@ const useAuthStore = create<IAuth>(set => ({
     }
   },
 
-  register: async (email, username, password) => {
-    const data = await registerUser(email, username, password);
+  register: async (username, email, password) => {
+    const data = await registerUser(username, email, password);
     localStorage.setItem('token', data.jwt);
     set({ isAuth: true, token: data.jwt });
   },
@@ -44,9 +46,7 @@ const useAuthStore = create<IAuth>(set => ({
   },
 
   //ui-helpers
-  startLoading: () => set({ loading: true, error: null, success: null }),
-  finishLoading: msg => set({ loading: false, success: msg || null }),
-  fail: errorMsg => set({ loading: false, error: errorMsg }),
+ 
   resetUI: () => set({ error: null, success: null }),
 
   setLoading: loading => set({ loading }),
@@ -57,7 +57,6 @@ const useAuthStore = create<IAuth>(set => ({
   toggleMode: () =>
     set(state => ({
       isLogin: !state.isLogin,
-      username: '',
       error: null,
       success: null,
       loading: false,

@@ -19,9 +19,6 @@ export interface IAuthActions {
 }
 
 export interface IAuthHelpers {
-  startLoading: () => void;
-  finishLoading: (msg?: string) => void;
-  fail: (errorMsg: string) => void;
   resetUI: () => void;
 }
 

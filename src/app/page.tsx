@@ -1,11 +1,11 @@
 'use client';
 
-import styles from './page.module.css';
+import PrivateRoute from '@/components/PrivateRoute/PrivateRoute';
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <h1>Добро пожаловать! Делитесь своими картинками</h1>
-    </main>
+    <PrivateRoute>
+      <></>
+    </PrivateRoute>
   );
 }

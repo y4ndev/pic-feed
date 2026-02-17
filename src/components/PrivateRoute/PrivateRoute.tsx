@@ -18,6 +18,7 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
       router.push('/login');
     } else {
       setIsAuth(true);
+      router.push('/dashboard');
     }
     setLoading(false);
   }, [setIsAuth, router]);
